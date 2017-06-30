@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router'
 
 import configStore from './common/config-store'
 import Routes from './common/routes'
+import 'bootstrap/dist/css/bootstrap.css'
 
 const store = configStore();
 
