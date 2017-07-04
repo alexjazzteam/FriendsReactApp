@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import {browserHistory} from 'react-router'
 import * as actionCreators from './login.action'
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: ""
+    componentWillMount() {
+        if (localStorage.getItem("token")) {
+            browserHistory.push('/friends');
         }
     }
 
@@ -19,6 +18,7 @@ class Login extends Component {
     render() {
         return (
             <div className="container">
+                {this.props.statusText ? <div className='alert alert-info'>{this.props.statusText}</div> : ''}
                 <div style={{marginTop: '100px'}} className="col-md-4 col-md-offset-4">
                     <h2 className="form-signin-heading">Please sign in</h2>
                     <label htmlFor="inputEmail" className="sr-only">Email address</label>
@@ -33,6 +33,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    statusText: state.login.statusText
 });
 
 const mapDispatchToProps = (dispatch) => ({

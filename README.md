@@ -1,5 +1,9 @@
 # Friends React App
 
+## Requirement
+
+* You have to install Node.js.
+
 ## Start project
 
 Clone this repository:
@@ -26,3 +30,8 @@ Start the project at [`http://localhost:3000`](http://localhost:3000).
 ```sh
 npm start
 ```
+
+Authorization:
+
+Email: hello@test.com
+Password: test

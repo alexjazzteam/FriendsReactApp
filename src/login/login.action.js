@@ -1,7 +1,13 @@
-export function loginUserSuccess(data) {
+import {getFriendsSuccess} from "../friends/friends.action"
+import {browserHistory} from 'react-router'
+
+export function loginUserSuccess(token) {
+    localStorage.setItem('token', token);
     return {
         type: "LOGIN_USER_SUCCESS",
-        payload: data
+        payload: {
+            token: token
+        }
     }
 }
 
@@ -29,23 +35,47 @@ export function loginUser(email, password) {
             headers: {
                 'Content-Type': 'application/json'
             },
-                body: JSON.stringify({email: email, password: password})
+                body: JSON.stringify(
+                    {
+                        email: email,
+                        password: password
+                    })
             })
-            .then(response => {
-                console.log(response);
-                if (response.status === 403) {
+            .then(function(response) {
+                try {
+                    dispatch(loginUserSuccess(response));
+                } catch (e) {
                     dispatch(loginUserFailure({
                         response: {
                             status: 403,
                             statusText: 'Invalid token'
                         }
                     }));
-                } else {
-                    dispatch(loginUserSuccess(response));
                 }
+                return response.json();
+            })
+            .then(function(json) {
+                dispatch(loginUserSuccess(json.token));
+                dispatch(getFriendsSuccess(json.friends));
+                browserHistory.push('/friends');
             })
             .catch(error => {
-                dispatch(loginUserFailure(error));
+                console.log(error);
+                dispatch(loginUserFailure({
+                    response: {
+                        status: 403,
+                        statusText: error
+                    }
+                }));
             })
+    }
+}
+
+export function logout() {
+    return {
+        type: "LOGOUT_USER",
+        payload: {
+            statusText: ""
+        }
     }
 }
